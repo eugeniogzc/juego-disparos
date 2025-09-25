@@ -17,6 +17,7 @@ class Player extends Character {
             myImageDead = PLAYER_PICTURE_DEAD;
 
         super(game, width, height, x, y, speed, myImage, myImageDead);
+        this.lives = LIVES;
     }
 
     /**
@@ -47,10 +48,17 @@ class Player extends Character {
      */
     collide() {
         if (!this.dead) {
-            setTimeout(() => {
+            this.lives--;
+            if (this.lives > 0) {
+                super.collide();
+                setTimeout(() => {
+                    this.image.src = this.myImage;
+                    this.dead = false;
+                }, 2000);
+            } else {
                 this.game.endGame();
-            }, 2000);
-            super.collide();
+                super.collide();
+            }
         }
     }
 }

@@ -17,6 +17,9 @@ class Game {
         this.opponentShots = []; // Disparos del oponente
         this.xDown = null; //  Posición en la que el usuario ha tocado la pantalla
         this.paused = false; // Indica si el juego está pausado
+        this.score = 0;
+        this.scoreli = document.getElementById("scoreli");
+        this.livesli = document.getElementById("livesli");
     }
 
     /**
@@ -24,7 +27,6 @@ class Game {
      */
     start () {
         if (!this.started) {
-            // RequestAnimationFrame(this.update());
             window.addEventListener("keydown", (e) => this.checkKey(e, true));
             window.addEventListener("keyup", (e) => this.checkKey(e, false));
             window.addEventListener("touchstart", (e) => this.handleTouchStart(e, true));
@@ -88,8 +90,12 @@ class Game {
     removeOpponent () {
         if (this.opponent) {
             document.body.removeChild(this.opponent.image);
+            if (this.opponent instanceof Boss) {
+                this.endGame(true); // Win the game
+            } else {
+                this.opponent = new Boss(this);
+            }
         }
-        this.opponent = new Opponent(this);
     }
 
     /**
@@ -204,11 +210,13 @@ class Game {
 
     /**
      * Termina el juego
+     * @param {boolean} win Indica si el jugador ha ganado o no
      */
-    endGame () {
+    endGame (win = false) {
         this.ended = true;
-        let gameOver = new Entity(this, this.width / 2, "auto", this.width / 4, this.height / 4, 0, GAME_OVER_PICTURE)
-        gameOver.render();
+        let picture = win ? YOU_WIN_PICTURE : GAME_OVER_PICTURE;
+        let endEntity = new Entity(this, this.width / 2, "auto", this.width / 4, this.height / 4, 0, picture)
+        endEntity.render();
     }
 
     /**
@@ -253,5 +261,7 @@ class Game {
         this.opponentShots.forEach((shot) => {
             shot.render();
         });
+        this.scoreli.innerHTML = `Score: ${this.score}`;
+        this.livesli.innerHTML = `Lives: ${this.player.lives}`;
     }
 }
