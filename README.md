@@ -1,4 +1,8 @@
 
+## Repositorio:
+
+https://github.com/eugeniogzc/juego-disparos.git
+
 ## Objetivo
 
 Practicar con clases, Booleans, Strings y con el manejo de eventos.
